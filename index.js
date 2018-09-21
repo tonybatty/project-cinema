@@ -12,26 +12,30 @@ const generateApiUrl = () => {
 const getContent = () => {
     console.log(generateApiUrl());
     fetch(generateApiUrl())
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (content) {
-        displayContent(content);
-    })
-    .catch(error => {
-        console.log("unable to get content");
-    });
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (content) {
+            displayContent(content);
+        })
+        .catch(error => {
+            console.log("unable to get content");
+        });
 }
 
 const displayContent = (content) => {
-    console.log(content);
-    const movieItems = document.querySelectorAll('.movies-item')
-    console.log("******" + content.Search[0].Poster);
-
-    movieItems.forEach((item, index) => {
-        const image = item.querySelector('.image');
-        image.src = content.Search[index].Poster;
-        
+    const container = document.querySelector('.movies');
+    content.Search.forEach((item, index) => {
+        const markup = `
+        <div class="movie">
+            <div class="movie__image">
+                <img class="image" src="${content.Search[index].Poster}">
+            </div>
+            <p class="movie__title">${content.Search[index].Title}</p>
+            <p class="movie__year">${content.Search[index].Year}</p>
+        </div>
+        `;
+        container.innerHTML += markup;
     })
 }
 
