@@ -11,7 +11,7 @@ body {
 }
 
 .search-bar {
-    background-color: #484D7C;
+    background-color: #2e2e2e;
     height: 100px;
     width: 100vw;
     display: flex;
@@ -31,12 +31,7 @@ body {
     padding-bottom:10px;
 }
 
-/* .movies{
-    display: flex;
-
-    justify-content: center;
-    max-width:1200px;
-} */
+/* Movie search results */
 
 .movie {
     margin:0px;
@@ -85,14 +80,131 @@ body {
     margin-top: 0px;
 }
 
+/* Movie details */
+
+.container-movie-info {
+    padding-right: 10px;
+
+}
+
+.movie-info-main {
+    padding-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+} 
+
+.movie-info-main__left {
+    display:flex;
+    flex-direction: column;
+    background-color: green;
+}
+
+.movie-info-main-left__image {
+    width: 33vw;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.movie-info-main-right {
+    max-height: 4.5em;
+    min-height: 4.5em;
+    width: 60vw;
+    padding-left: 10px;
+}
+
+.movie-info-top__rating {
+    padding-top: 10px;
+}
+
+.movie-info-ratings {
+    padding-top:20px;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.movie-info-ratings__left {
+    flex: 1;
+}
+
+.movie-info-ratings__middle {
+    flex: 1;
+}
+
+.movie-info-ratings__right {
+    flex: 1;
+}
+
+.movie-info-bottom {
+    padding-top: 10px;
+    width: 100%;
+}
+
+.movie-info-main__plot {
+    display: none;
+}
+
+.movie-info-bottom__plot {
+    display: unset;
+}
+
+h2 {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+h2 span {
+    color: grey;
+    font-weight: 300;
+}
+
+h3 {
+    color: grey;
+    font-size: 10px;
+    font-weight: 300;
+}
+
+h4 {
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5em;
+    padding-top: 0.75em;
+}
+
+p {
+    color: white;
+    font-size: 12px;
+    line-height: 1.5em;
+}
+
+
+
+
 /* Tablet Layout */
 
 @media (min-width: 768px) {
+
+    .container {
+        max-width: 85vw;
+        padding-left:20px;
+        padding-bottom:20px;
+    }
 
     .movie {
         width: calc(25vw - 12.5px);
     } 
 
+    .movie-info-main__plot {
+        display: unset;
+    }
+
+    .movie-info-bottom__plot {
+        display: none;
+    }
 
 }
 
@@ -114,6 +226,18 @@ body {
         padding-top: 20px;
     } 
 
-    
+    .movie-info-main-left__image {
+        width: 20vw;
+        object-fit: cover;
+        border-radius: 7px;
+    }
+
+    .movie-info-main__plot {
+        display: unset;
+    }
+
+    .movie-info-bottom__plot {
+        display: none;
+    }
 
 }
