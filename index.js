@@ -12,13 +12,11 @@ const generateApiUrl = () => {
     if (apiValues.searchResults === true) {
         return `${apiValues.url}apikey=${apiValues.key}&s=${apiValues.search}*`
     } else {
-        console.log("not search results");
         return `${apiValues.url}apikey=${apiValues.key}&i=${apiValues.imdbId}&plot=Full`
     }
 }
 
 const getContent = () => {
-    console.log(generateApiUrl());
 
     fetch(generateApiUrl())
         .then(function (response) {
@@ -26,7 +24,6 @@ const getContent = () => {
         })
         .then(function (content) {
             displayContent(content);
-            console.log(content);
         })
         .catch(error => {
             displayErrortoUser("unable to get content");
@@ -38,7 +35,6 @@ const getContent = () => {
 }
 
 const displayContent = (content) => {
-    console.log(content);
     let generatedHtml = '';
     if (apiValues.searchResults === true) {
         content.Search.forEach((item, index) => {
@@ -56,14 +52,19 @@ const displayContent = (content) => {
             generatedHtml += markup;
         })
     } else {
-        console.log("*****");
+        console.log(content);
         generatedHtml = `
-        <div class="movie-info-main" id="">
+        <div class="movie-info-main" id="${content.imdbID}">
             <div class="movie-info-main-left">
                 <img class="movie-info-main-left__image" src="${content.Poster}">
             </div>
             <div class="movie-info-main-right">
-                <h2 class="movie-info-top__title">${content.Title}<span class="movie-info__year"> (${content.Year})</span></h2>
+                <div class="movie-info-top__title" id="${content.Title}">
+                    <h2>${content.Title}&nbsp;<span class="movie-info__year">(${content.Year})</span></h2>
+                    <a href="#">
+                        <img class="favorite" src="images/favorite.png">
+                    </a>
+                </div>
                 <h3 class="movie-info-top__rating">${content.Rated} - ${content.Genre} - ${content.Runtime}</h3>
                 <div class="movie-info-ratings">
                     <div class="movie-info-ratings__left">
@@ -99,12 +100,28 @@ const displayContent = (content) => {
     container.innerHTML = generatedHtml;
 }
 
-const searchMovies = document.querySelector('.search-form')
+const displayFavorites = () => {
+    const dropdownMenu = document.querySelector('.dropdown-content');
+    dropdownMenu.innerHTML = `<a class="favorites-title">Favorites</a>`;
+    for (let i = 0; i < localStorage.length; ++i) {
+        let favId = localStorage.key(i);
+        let favName = localStorage.getItem(localStorage.key(i));
+        dropdownMenu.innerHTML += `
+        <div class="favorite-row">
+            <a href="#">${favName}</a>
+            <a class="delete-btn" id="${favId}" href="#">
+                <img src="images/delete.png">
+            </a>
+        </div>
+        `;
+    }
+}
+
+const searchMovies = document.querySelector('.header-container__search')
 searchMovies.addEventListener("submit", event => {
     event.preventDefault();
     apiValues.search = (document.querySelector(".search-input").value).replace(/\s+/g, '*+');
     apiValues.searchResults = true;
-    console.log(apiValues.search);
     container.innerHTML = "";
     getContent();
 })
@@ -112,12 +129,53 @@ searchMovies.addEventListener("submit", event => {
 document.addEventListener("click", function (event) {
     if (event.target.parentNode.parentNode.className === 'movie') {
         event.preventDefault();
+        console.log(event.target.parentNode.parentNode.id);
         apiValues.imdbId = event.target.parentNode.parentNode.id;
         apiValues.searchResults = false;
         getContent();
     }
 
+    if (event.target.className === 'favorite') {
+        // console.log("favorite was clicked");
+        const movieId = document.querySelector(".movie-info-main").id;
+        const movieName = document.querySelector(".movie-info-top__title").id;
+        localStorage.setItem(movieId, movieName);
+
+        for (let i = 0; i < localStorage.length; ++i) {
+            console.log(localStorage.getItem(localStorage.key(i)));
+        }
+    }
+
+    if (event.target.className === 'favorites-folder') {
+        displayFavorites();
+    }
+
+    if (event.target.parentNode.className === 'delete-btn') {
+        localStorage.removeItem(event.target.parentNode.id);
+        displayFavorites();
+    }
+
 });
+
+const favoritesButton = document.querySelector(".favorites-button");
+const dropdownContent = document.querySelector(".dropdown-content")
+favoritesButton.addEventListener("click", function(event) {
+    console.log(dropdownContent)
+    if (dropdownContent.style.display === "none") {
+        dropdownContent.style.display = "block";
+    } else {
+        dropdownContent.style.display = "none";
+    }
+})
+
+// function myFunction() {
+//     var x = document.getElementById("myDIV");
+//     if (x.style.display === "none") {
+//         x.style.display = "block";
+//     } else {
+//         x.style.display = "none";
+//     }
+// }
 
 // getContent();
 
