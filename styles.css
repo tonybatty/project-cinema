@@ -314,7 +314,7 @@ p {
     }
 
     .movie {
-        width: calc(25vw - 12.5px);
+        width: calc(21.25vw - 12.5px);
     } 
 
     .favorite {
@@ -331,6 +331,7 @@ p {
 
     .movie-info-main__plot {
         display: unset;
+        padding-top: 20px;
     }
 
     .movie-info-bottom__plot {
@@ -339,6 +340,7 @@ p {
 
     .movie-info-ratings {
         flex: 0;
+        margin-top: 20px;
     }
 
 }

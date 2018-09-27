@@ -1,4 +1,6 @@
 const container = document.querySelector('.container');
+
+// Stores values to generate API URL
 const apiValues = {
     url: 'http://www.omdbapi.com/?',
     key: 'f155c772',
@@ -8,6 +10,7 @@ const apiValues = {
     imdbId: '',
 }
 
+// Generates the API URL from apiValues
 const generateApiUrl = () => {
     if (apiValues.searchResults === true) {
         return `${apiValues.url}apikey=${apiValues.key}&s=${apiValues.search}*`
@@ -16,6 +19,7 @@ const generateApiUrl = () => {
     }
 }
 
+// fetches content from API then calls displayContent to display on page
 const getContent = () => {
 
     fetch(generateApiUrl())
@@ -34,6 +38,7 @@ const getContent = () => {
     }
 }
 
+// Generates HTML with the content fetched from the API and displays it on the page
 const displayContent = (content) => {
     let generatedHtml = '';
     if (apiValues.searchResults === true) {
@@ -52,7 +57,6 @@ const displayContent = (content) => {
             generatedHtml += markup;
         })
     } else {
-        console.log(content);
         generatedHtml = `
         <div class="movie-info-main" id="${content.imdbID}">
             <div class="movie-info-main-left">
@@ -62,7 +66,7 @@ const displayContent = (content) => {
                 <div class="movie-info-top__title" id="${content.Title}">
                     <h2>${content.Title}&nbsp;<span class="movie-info__year">(${content.Year})</span></h2>
                     <a href="#">
-                        <img class="favorite" src="images/favorite.png">
+                        <img class="favorite" data-movie-id="${content.imdbID}" src="images/favorite.png">
                     </a>
                 </div>
                 <h3 class="movie-info-top__rating">${content.Rated} - ${content.Genre} - ${content.Runtime}</h3>
@@ -100,6 +104,7 @@ const displayContent = (content) => {
     container.innerHTML = generatedHtml;
 }
 
+// Displays favorites menu with favorites saved in local storage
 const displayFavorites = () => {
     const dropdownMenu = document.querySelector('.dropdown-content');
     dropdownMenu.innerHTML = `<a class="favorites-title">Favorites</a>`;
@@ -117,6 +122,7 @@ const displayFavorites = () => {
     }
 }
 
+// Event listener for search form
 const searchMovies = document.querySelector('.header-container__search')
 searchMovies.addEventListener("submit", event => {
     event.preventDefault();
@@ -126,24 +132,19 @@ searchMovies.addEventListener("submit", event => {
     getContent();
 })
 
+// Event listeners for movies and favourites
 document.addEventListener("click", function (event) {
     if (event.target.parentNode.parentNode.className === 'movie') {
         event.preventDefault();
-        console.log(event.target.parentNode.parentNode.id);
         apiValues.imdbId = event.target.parentNode.parentNode.id;
         apiValues.searchResults = false;
         getContent();
     }
 
     if (event.target.className === 'favorite') {
-        // console.log("favorite was clicked");
-        const movieId = document.querySelector(".movie-info-main").id;
-        const movieName = document.querySelector(".movie-info-top__title").id;
+        const movieId = event.target.dataset.movieId;
+        const movieName = event.target.parentNode.parentNode.id;
         localStorage.setItem(movieId, movieName);
-
-        for (let i = 0; i < localStorage.length; ++i) {
-            console.log(localStorage.getItem(localStorage.key(i)));
-        }
     }
 
     if (event.target.className === 'favorites-folder') {
@@ -157,25 +158,14 @@ document.addEventListener("click", function (event) {
 
 });
 
+// Toggles favorites menu to display when favourites button clicked
 const favoritesButton = document.querySelector(".favorites-button");
 const dropdownContent = document.querySelector(".dropdown-content")
 favoritesButton.addEventListener("click", function(event) {
-    console.log(dropdownContent)
     if (dropdownContent.style.display === "none") {
         dropdownContent.style.display = "block";
     } else {
         dropdownContent.style.display = "none";
     }
 })
-
-// function myFunction() {
-//     var x = document.getElementById("myDIV");
-//     if (x.style.display === "none") {
-//         x.style.display = "block";
-//     } else {
-//         x.style.display = "none";
-//     }
-// }
-
-// getContent();
 
